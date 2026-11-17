@@ -1,0 +1,61 @@
+[
+  {"question": "Which region brings in the most revenue? Show every region and its total, highest first.",
+   "ordered": true,
+   "sql": "SELECT region, SUM(revenue) AS revenue FROM orders GROUP BY region ORDER BY revenue DESC"},
+
+  {"question": "What was total revenue in each month of 2025? Show the month as a two-digit number.",
+   "ordered": false,
+   "sql": "SELECT strftime('%m', order_date) AS month, SUM(revenue) AS revenue FROM orders GROUP BY month"},
+
+  {"question": "What percentage of orders were returned in each category?",
+   "ordered": false,
+   "sql": "SELECT category, ROUND(100.0 * AVG(returned), 2) AS return_pct FROM orders GROUP BY category"},
+
+  {"question": "What is the average order value for each channel?",
+   "ordered": false,
+   "sql": "SELECT channel, ROUND(AVG(revenue), 2) AS avg_order FROM orders GROUP BY channel"},
+
+  {"question": "Who are the five biggest customers by total revenue? Show the customer id and their revenue, biggest first.",
+   "ordered": true,
+   "sql": "SELECT customer_id, SUM(revenue) AS revenue FROM orders GROUP BY customer_id ORDER BY revenue DESC LIMIT 5"},
+
+  {"question": "How many orders were placed in total?",
+   "ordered": false,
+   "sql": "SELECT COUNT(*) AS orders FROM orders"},
+
+  {"question": "How many different customers placed at least one order?",
+   "ordered": false,
+   "sql": "SELECT COUNT(DISTINCT customer_id) AS customers FROM orders"},
+
+  {"question": "What is total revenue from Business customers and from Consumer customers?",
+   "ordered": false,
+   "sql": "SELECT c.segment, SUM(o.revenue) AS revenue FROM orders o JOIN customers c ON c.customer_id = o.customer_id GROUP BY c.segment"},
+
+  {"question": "How many orders did each channel take in December?",
+   "ordered": false,
+   "sql": "SELECT channel, COUNT(*) AS orders FROM orders WHERE strftime('%m', order_date) = '12' GROUP BY channel"},
+
+  {"question": "Which category has the highest total revenue in the West region? Give just that category and its revenue.",
+   "ordered": false,
+   "sql": "SELECT category, SUM(revenue) AS revenue FROM orders WHERE region = 'West' GROUP BY category ORDER BY revenue DESC LIMIT 1"},
+
+  {"question": "How many customers placed more than ten orders?",
+   "ordered": false,
+   "sql": "SELECT COUNT(*) AS customers FROM (SELECT customer_id FROM orders GROUP BY customer_id HAVING COUNT(*) > 10)"},
+
+  {"question": "What share of total revenue comes from the App channel, as a percentage?",
+   "ordered": false,
+   "sql": "SELECT ROUND(100.0 * SUM(CASE WHEN channel = 'App' THEN revenue ELSE 0 END) / SUM(revenue), 2) AS app_pct FROM orders"},
+
+  {"question": "What was the single largest order? Show its order id and revenue.",
+   "ordered": false,
+   "sql": "SELECT order_id, revenue FROM orders ORDER BY revenue DESC, order_id LIMIT 1"},
+
+  {"question": "How many customers placed their first order in the first quarter of 2025?",
+   "ordered": false,
+   "sql": "SELECT COUNT(*) AS customers FROM customers WHERE first_order_date < '2025-04-01'"},
+
+  {"question": "For each region, how many orders were returned?",
+   "ordered": false,
+   "sql": "SELECT region, SUM(returned) AS returned_orders FROM orders GROUP BY region"}
+]
